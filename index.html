@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Calculadora</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+    <!-- Container da Calculadora -->
+    <div class="bg-gray-900 p-6 rounded-2xl shadow-2xl w-80">
+
+        <!-- Título -->
+        <h1 class="text-white text-2xl font-bold text-center mb-5">
+            Calculadora
+        </h1>
+
+        <!-- Visor -->
+        <input
+            type="text"
+            id="display"
+            value="0"
+            readonly
+            class="w-full bg-gray-800 text-white text-right text-3xl p-4 rounded-lg mb-5 outline-none"
+        >
+
+        <!-- Botões -->
+        <div class="grid grid-cols-4 gap-3">
+
+            <!-- Linha 1 -->
+            <button onclick="limpar()" class="btn bg-red-500 hover:bg-red-600">C</button>
+            <button onclick="apagar()" class="btn bg-gray-600 hover:bg-gray-500">⌫</button>
+            <button onclick="adicionar('%')" class="btn bg-gray-600 hover:bg-gray-500">%</button>
+            <button onclick="adicionar('/')" class="btn bg-orange-500 hover:bg-orange-600">÷</button>
+
+            <!-- Linha 2 -->
+            <button onclick="adicionar('7')" class="btn">7</button>
+            <button onclick="adicionar('8')" class="btn">8</button>
+            <button onclick="adicionar('9')" class="btn">9</button>
+            <button onclick="adicionar('*')" class="btn bg-orange-500 hover:bg-orange-600">×</button>
+
+            <!-- Linha 3 -->
+            <button onclick="adicionar('4')" class="btn">4</button>
+            <button onclick="adicionar('5')" class="btn">5</button>
+            <button onclick="adicionar('6')" class="btn">6</button>
+            <button onclick="adicionar('-')" class="btn bg-orange-500 hover:bg-orange-600">−</button>
+
+            <!-- Linha 4 -->
+            <button onclick="adicionar('1')" class="btn">1</button>
+            <button onclick="adicionar('2')" class="btn">2</button>
+            <button onclick="adicionar('3')" class="btn">3</button>
+            <button onclick="adicionar('+')" class="btn bg-orange-500 hover:bg-orange-600">+</button>
+
+            <!-- Linha 5 -->
+            <button onclick="adicionar('0')" class="btn col-span-2">0</button>
+            <button onclick="adicionar('.')" class="btn">.</button>
+            <button onclick="calcular()" class="btn bg-green-500 hover:bg-green-600">=</button>
+
+        </div>
+
+    </div>
+
+    <!-- Estilos dos botões -->
+    <style>
+        .btn {
+            background-color: #374151;
+            color: white;
+            font-size: 1.25rem;
+            font-weight: bold;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #4b5563;
+        }
+    </style>
+
+    <!-- JavaScript -->
+    <script>
+
+        const display = document.getElementById("display");
+
+        // Adiciona valores ao visor
+        function adicionar(valor) {
+
+            if (display.value === "0") {
+                display.value = valor;
+            } else {
+                display.value += valor;
+            }
+
+        }
+
+        // Limpa o visor
+        function limpar() {
+            display.value = "0";
+        }
+
+        // Apaga o último caractere
+        function apagar() {
+
+            display.value = display.value.slice(0, -1);
+
+            if (display.value === "") {
+                display.value = "0";
+            }
+
+        }
+
+        // Realiza o cálculo
+        function calcular() {
+
+            try {
+
+                const expressao = display.value;
+
+                // Validação de caracteres permitidos
+                if (!/^[0-9+\-*/%.() ]+$/.test(expressao)) {
+                    throw new Error("Expressão inválida");
+                }
+
+                // Avalia a expressão matemática
+                const resultado = Function(
+                    '"use strict"; return (' + expressao + ')'
+                )();
+
+                if (!Number.isFinite(resultado)) {
+                    throw new Error("Resultado inválido");
+                }
+
+                display.value = resultado;
+
+            } catch (erro) {
+
+                display.value = "Erro";
+
+                setTimeout(() => {
+                    display.value = "0";
+                }, 1500);
+
+            }
+
+        }
+
+    </script>
+
+</body>
+</html>
